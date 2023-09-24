@@ -3,14 +3,14 @@
 # Installation
 
 
-# Date Utils Plus
+# Date Util Plus
 
 ![Dart](https://img.shields.io/badge/Dart-2.1.0+-blue.svg)
 ![Flutter](https://img.shields.io/badge/Flutter-2.0+-blue.svg)
-[![Pub](https://img.shields.io/pub/v/date_utils_plus.svg)](https://pub.dev/packages/date_utils_plus)
+[![Pub](https://img.shields.io/pub/v/date_utils_plus.svg)](https://pub.dev/packages/date_util_plus)
 
 
-Date Utils Plus package provides a set of date and time formatting extensions for the DateTime and String classes. These extensions make it easy to format, manipulate, and work with date and time values in your Dart and Flutter applications.
+ Say goodbye to date-related headaches with a complete set of date helper methods that go beyond the DateTime API.
 
 ## Key Features
 
@@ -110,13 +110,14 @@ print('Weeks in Month: $weeksInMonth'); // Weeks in Month: 4
 
 - **Format date with reference**
 ```dart
-    String? dateFormat = "September 23, 2023".detectDateFormat();
-    String? formattedDate =
-        DateTime.now().formatDate(likeGiven: "September 23, 2023");
-    print(dateFormat); // MMMM dd, yyyy
-    print(formattedDate);  //September 24, 2023
+String? formattedDate = DateTime.now().formatDate(likeGiven: "September 23, 2023");
+print(formattedDate);  //September 24, 2023
 ```
 
+
+## Feature requests and Bug reports
+
+Feel free to post a feature requests or report a bug [here](https://github.com/Oauth-Celestial/date_util_plus/issues).
 
 
 

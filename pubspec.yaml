@@ -1,7 +1,7 @@
 name: date_util_plus
-description: A new Flutter package project.
+description: A simple dart API with a complete set of date helper methods not available in the DateTime API.
 version: 0.0.1
-homepage:
+repository: "https://github.com/Oauth-Celestial/date_util_plus.git"
 
 environment:
   sdk: '>=3.1.2 <4.0.0'
