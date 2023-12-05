@@ -37,7 +37,8 @@ class _MyHomePageState extends State<MyHomePage> {
     String? formattedDate =
         DateTime.now().formatDate(likeGiven: "September 23, 2023");
     print(dateFormat); // MMMM dd, yyyy
-    print(formattedDate); //September 24, 2023
+    print(formattedDate); 
+    //September 24, 2023
   }
 
   int _counter = 0;

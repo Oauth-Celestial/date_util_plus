@@ -1,10 +1,16 @@
 import 'package:intl/intl.dart';
+part 'date_ext.dart';
+
 
 extension DateTimeFormatting on DateTime {
   /// Format DateTime as ISO 8601
   String toIso8601() {
     return toIso8601String();
   }
+
+  bool isSameDate({ required  DateTime date2}) {
+  return year == date2.year && month == date2.month && day == date2.day;
+}
 
   /// Format DateTime as Short Date: MM/DD/YYYY
   String toShortDate() {
@@ -27,19 +33,19 @@ extension DateTimeFormatting on DateTime {
       'November',
       'December'
     ];
-    return '${monthNames[month - 1]} ${day}, ${year}';
+    return '${monthNames[month - 1]} $day, $year';
   }
 
   /// Format DateTime as 24-Hour Time: HH:MM:SS
-  String to24HourTime() {
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}';
+  String to24HourTime({bool includeSeconds = false}) {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${includeSeconds ? second.toString().padLeft(2, '0'): ""}' ;
   }
 
   /// Format DateTime as 12-Hour Time with AM/PM: hh:MM:SS AM/PM
-  String to12HourTime() {
+  String to12HourTime({bool includeSeconds = false}) {
     String period = this.hour < 12 ? 'AM' : 'PM';
     int hour = this.hour % 12 == 0 ? 12 : this.hour % 12;
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period';
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${includeSeconds ? second.toString().padLeft(2, '0'): ""} $period';
   }
 
   /// addDays(): Adds a specified number of days to a DateTime.
@@ -164,6 +170,166 @@ extension DateTimeFormatting on DateTime {
     String formattedDate = DateFormat(dateFormat).format(this);
     return formattedDate;
   }
+
+   bool isFutureDate() {
+    final currentTime = DateTime.now();
+    return isAfter(currentTime);
+  }
+
+  
+   bool isPastDate() {
+    final currentTime = DateTime.now();
+    return isBefore(currentTime);
+  }
+
+  String formatWithPattern({String pattern = "dd-MM-yyyy"}) {
+    final DateFormat dateFormat = DateFormat(pattern);
+    return dateFormat.format(this);
+  }
+
+
+
+  int differenceInMonth({ required DateTime endDate}){
+    
+    Duration difference = this.difference(endDate);
+     int months = (difference.inDays % 365) ~/ 30;
+
+     return months;
+
+  }
+
+    int differenceInYear({ required DateTime endDate}){
+    
+    Duration difference = this.difference(endDate);
+      int years = difference.inDays ~/ 365;
+
+     return years;
+
+  }
+
+  bool isLeapYear() {
+    int year = this.year;
+
+    if (year % 4 != 0) {
+      /// Not divisible by 4, not a leap year
+      return false;
+    } else if (year % 100 != 0) {
+      /// Divisible by 4 but not by 100, it is a leap year
+      return true;
+    } else if (year % 400 != 0) {
+      /// Divisible by 100 but not by 400, not a leap year
+      return false;
+    } else {
+      /// Divisible by 400, it is a leap year
+      return true;
+    }
+  }
+
+  int differenceInDays({ required   DateTime endDate}){
+  Duration difference = this.difference(endDate);
+  int days = difference.inDays % 30;
+  return days;
+  }
+
+
+     bool isFirstDayOfMonth() {
+    return isSameDay(firstDayOfMonth(this), this);
+  }
+
+   bool isLastDayOfMonth() {
+    return isSameDay(lastDayOfMonth(this), this);
+  }
+
+    static bool isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  static bool isSameWeek(DateTime a, DateTime b) {
+    /// Handle Daylight Savings by setting hour to 12:00 Noon
+    /// rather than the default of Midnight
+    a = DateTime.utc(a.year, a.month, a.day);
+    b = DateTime.utc(b.year, b.month, b.day);
+
+    var diff = a.toUtc().difference(b.toUtc()).inDays;
+    if (diff.abs() >= 7) {
+      return false;
+    }
+
+    var min = a.isBefore(b) ? a : b;
+    var max = a.isBefore(b) ? b : a;
+    var result = max.weekday % 7 - min.weekday % 7 >= 0;
+    return result;
+  }
+
+  static DateTime firstDayOfMonth(DateTime month) {
+    return DateTime(month.year, month.month);
+  }
+
+   DateTime firstDayOfWeek() {
+    /// Handle Daylight Savings by setting hour to 12:00 Noon
+    /// rather than the default of Midnight
+   var givenDay  = DateTime.utc(year, month, day, 12);
+
+    /// Weekday is on a 1-7 scale Monday - Sunday,
+    /// This Calendar works from Sunday - Monday
+    var decreaseNum =givenDay.weekday % 7;
+    return givenDay.subtract(Duration(days: decreaseNum));
+  }
+
+   DateTime lastDayOfWeek() {
+    /// Handle Daylight Savings by setting hour to 12:00 Noon
+    /// rather than the default of Midnight
+  var likeGiven = DateTime.utc(year, month, day, 12);
+
+    /// Weekday is on a 1-7 scale Monday - Sunday,
+    /// This Calendar's Week starts on Sunday
+    var increaseNum = likeGiven.weekday % 7;
+    return likeGiven.add(Duration(days: 7 - increaseNum));
+  }
+
+  /// The last day of a given month
+  static DateTime lastDayOfMonth(DateTime month) {
+    var beginningNextMonth = (month.month < 12)
+        ? DateTime(month.year, month.month + 1, 1)
+        : DateTime(month.year + 1, 1, 1);
+    return beginningNextMonth.subtract(Duration(days: 1));
+  }
+
+
+    static Iterable<DateTime> daysInRange(DateTime start, DateTime end) sync* {
+    var i = start;
+    var offset = start.timeZoneOffset;
+    while (i.isBefore(end)) {
+      yield i;
+      i = i.add(Duration(days: 1));
+      var timeZoneDiff = i.timeZoneOffset - offset;
+      if (timeZoneDiff.inSeconds != 0) {
+        offset = i.timeZoneOffset;
+        i = i.subtract(Duration(seconds: timeZoneDiff.inSeconds));
+      }
+    }
+  }
+
+   List<DateTime> daysInMonth() {
+    var first = firstDayOfMonth(this);
+    var daysBefore = first.weekday;
+    var firstToDisplay = first.subtract(Duration(days: daysBefore));
+    var last = DateUtils.lastDayOfMonth(this);
+
+    var daysAfter = 7 - last.weekday;
+
+    // If the last day is sunday (7) the entire week must be rendered
+    if (daysAfter == 0) {
+      daysAfter = 7;
+    }
+
+    var lastToDisplay = last.add(Duration(days: daysAfter));
+    return daysInRange(firstToDisplay, lastToDisplay).toList();
+  }
+
+  
+
+
 }
 
 extension DateEx on String {
@@ -196,4 +362,17 @@ extension DateEx on String {
 
     return null;
   }
+
+
+
+
+  DateTime getDateFromString({String pattern = "dd-MM-yyyy"}){
+    DateFormat dateFormat = DateFormat(pattern);
+
+  // Parse the date string
+  DateTime dateTime = dateFormat.parse(this);
+
+  return dateTime;
+  }
+
 }
