@@ -1,12 +1,17 @@
- part of 'date_util.dart';
+import 'package:date_util_plus/extensions/string_extension.dart';
+import 'package:intl/intl.dart';
+part 'extensions/date_extension.dart';
+
+class DateUtilPlus{
+
+DateUtilPlus._();
+
+static final DateUtilPlus _instance = DateUtilPlus._();
+
+static DateUtilPlus get instance => _instance;
 
 
-
-
-
-
-class DateUtils {
-  static final DateFormat _monthFormat = DateFormat('MMMM yyyy');
+static final DateFormat _monthFormat = DateFormat('MMMM yyyy');
   static final DateFormat _dayFormat = DateFormat('dd');
   static final DateFormat _firstDayFormat = DateFormat('MMM dd');
   static final DateFormat _fullDayFormat = DateFormat('EEE MMM dd, yyyy');
@@ -37,7 +42,7 @@ class DateUtils {
     var first = firstDayOfMonth(month);
     var daysBefore = first.weekday;
     var firstToDisplay = first.subtract(Duration(days: daysBefore));
-    var last = DateUtils.lastDayOfMonth(month);
+    var last = lastDayOfMonth(month);
 
     var daysAfter = 7 - last.weekday;
 
@@ -132,36 +137,5 @@ class DateUtils {
     return result;
   }
 
-  static DateTime previousMonth(DateTime m) {
-    var year = m.year;
-    var month = m.month;
-    if (month == 1) {
-      year--;
-      month = 12;
-    } else {
-      month--;
-    }
-    return DateTime(year, month);
-  }
 
-  static DateTime nextMonth(DateTime m) {
-    var year = m.year;
-    var month = m.month;
-
-    if (month == 12) {
-      year++;
-      month = 1;
-    } else {
-      month++;
-    }
-    return DateTime(year, month);
-  }
-
-  static DateTime previousWeek(DateTime w) {
-    return w.subtract(Duration(days: 7));
-  }
-
-  static DateTime nextWeek(DateTime w) {
-    return w.add(Duration(days: 7));
-  }
 }

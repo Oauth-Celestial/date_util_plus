@@ -1,5 +1,8 @@
-import 'package:intl/intl.dart';
-part 'date_ext.dart';
+ part of '../date_helper.dart';
+
+
+
+
 
 
 extension DateTimeFormatting on DateTime {
@@ -8,13 +11,47 @@ extension DateTimeFormatting on DateTime {
     return toIso8601String();
   }
 
-  bool isSameDate({ required  DateTime date2}) {
+
+ DateTime previousMonth() {
+    var y = year;
+    var m = month;
+    if (m == 1) {
+      y--;
+      m = 12;
+    } else {
+      m--;
+    }
+    return DateTime(y, m);
+  }
+
+   DateTime nextMonth() {
+    var y = year;
+    var m = month;
+
+    if (month == 12) {
+      y++;
+      m = 1;
+    } else {
+      m++;
+    }
+    return DateTime(y, m);
+  }
+
+  bool isSameDate({required  DateTime date2}) {
   return year == date2.year && month == date2.month && day == date2.day;
 }
 
   /// Format DateTime as Short Date: MM/DD/YYYY
   String toShortDate() {
     return '${month.toString().padLeft(2, '0')}/${day.toString().padLeft(2, '0')}/$year';
+  }
+
+ DateTime previousWeek() {
+    return subtract(Duration(days: 7));
+  }
+
+DateTime nextWeek() {
+    return add(Duration(days: 7));
   }
 
   /// Format DateTime as Long Date: Month DD, YYYY
@@ -314,7 +351,7 @@ extension DateTimeFormatting on DateTime {
     var first = firstDayOfMonth(this);
     var daysBefore = first.weekday;
     var firstToDisplay = first.subtract(Duration(days: daysBefore));
-    var last = DateUtils.lastDayOfMonth(this);
+    var last = lastDayOfMonth(this);
 
     var daysAfter = 7 - last.weekday;
 
@@ -325,54 +362,6 @@ extension DateTimeFormatting on DateTime {
 
     var lastToDisplay = last.add(Duration(days: daysAfter));
     return daysInRange(firstToDisplay, lastToDisplay).toList();
-  }
-
-  
-
-
-}
-
-extension DateEx on String {
-  String? detectDateFormat() {
-    Map<String, String> regexWithFormat = {
-      r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}': "yyyy-MM-dd HH:mm:ss",
-      r'\w{3}, \w{3} \d{1,2}, \d{2}': "EEE, MMM d, 'yy",
-      r'\w+ \d{1,2}, \d{4}': "MMMM dd, yyyy",
-      r'\d{2}/\d{2}/\d{4}': "MM/dd/yyyy",
-      r'\d{2}-\d{2}-\d{4}': "dd-MM-yyyy",
-      r'\d{2}:\d{2} [APap][Mm]': "hh:mm a",
-      r'\w+ \d{4}': "MMMM yyyy",
-      r'\w{3}, \d{1,2} \w{3} \d{4}': "EEE, dd MMM yyyy HH:mm:ss",
-      r'\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}': "dd/MM/yyyy HH:mm:ss",
-      r'\d{4}-\d{2}-\d{2}': "yyyy-MM-dd", //(Date only)
-      r'\d{1,2} \w{3} \d{4}': " d MMM yyyy", // (e.g., 22 Sep 2023)
-      r'\w{3}, \d{1,2} \w{3} \d{2}': "EEE, d MMM 'yy", //(e.g., Fri, 22 Sep '23)
-      r'\d{2}:\d{2}': "HH:mm", // (Time only)
-      r'\d{1,2}/\d{1,2}/\d{2}': "M/d/yy", // (e.g., 9/22/23)
-      r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}': "yyyy-MM-ddTHH:mm:ss",
-      r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z': "yyyy-MM-ddTHH:mm:ssZ"
-    };
-
-    for (final entry in regexWithFormat.entries) {
-      final regex = RegExp(entry.key);
-      if (regex.hasMatch(this)) {
-        return entry.value;
-      }
-    }
-
-    return null;
-  }
-
-
-
-
-  DateTime getDateFromString({String pattern = "dd-MM-yyyy"}){
-    DateFormat dateFormat = DateFormat(pattern);
-
-  // Parse the date string
-  DateTime dateTime = dateFormat.parse(this);
-
-  return dateTime;
   }
 
 }

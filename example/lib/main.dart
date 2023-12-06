@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:date_util_plus/date_util.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -33,11 +33,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   formatDateBasedOn() {
-    String? dateFormat = "September 23, 2023".detectDateFormat();
-    String? formattedDate =
-        DateTime.now().formatDate(likeGiven: "September 23, 2023");
-    print(dateFormat); // MMMM dd, yyyy
-    print(formattedDate); 
+  
     //September 24, 2023
   }
 
