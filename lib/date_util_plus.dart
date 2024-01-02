@@ -1,3 +1,6 @@
 library date_util_plus;
 
-export 'date_helper.dart';
+
+import 'package:intl/intl.dart';
+part 'extensions/date_extension.dart';
+part 'extensions/string_extension.dart';

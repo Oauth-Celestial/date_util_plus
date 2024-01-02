@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 
+part of '../date_util_plus.dart';
 extension DateEx on String {
   String? detectDateFormat() {
     Map<String, String> regexWithFormat = {
@@ -30,9 +30,6 @@ extension DateEx on String {
 
     return null;
   }
-
-
-
 
   DateTime getDateFromString({String pattern = "dd-MM-yyyy"}){
     DateFormat dateFormat = DateFormat(pattern);

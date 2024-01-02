@@ -1,18 +1,11 @@
- part of '../date_helper.dart';
-
-
-
-
-
-
+ part of '../date_util_plus.dart';
 extension DateTimeFormatting on DateTime {
   /// Format DateTime as ISO 8601
   String toIso8601() {
     return toIso8601String();
   }
 
-
- DateTime previousMonth() {
+ DateTime getPreviousMonth() {
     var y = year;
     var m = month;
     if (m == 1) {
@@ -24,7 +17,7 @@ extension DateTimeFormatting on DateTime {
     return DateTime(y, m);
   }
 
-   DateTime nextMonth() {
+   DateTime getNextMonth() {
     var y = year;
     var m = month;
 
@@ -42,20 +35,20 @@ extension DateTimeFormatting on DateTime {
 }
 
   /// Format DateTime as Short Date: MM/DD/YYYY
-  String toShortDate() {
+  String toMMDDYYFormat() {
     return '${month.toString().padLeft(2, '0')}/${day.toString().padLeft(2, '0')}/$year';
   }
 
  DateTime previousWeek() {
-    return subtract(Duration(days: 7));
+    return subtract(const  Duration(days: 7));
   }
 
 DateTime nextWeek() {
-    return add(Duration(days: 7));
+    return add(const Duration(days: 7));
   }
 
   /// Format DateTime as Long Date: Month DD, YYYY
-  String toLongDate() {
+  String toMonthDDYYYY() {
     final monthNames = [
       'January',
       'February',
@@ -86,17 +79,17 @@ DateTime nextWeek() {
   }
 
   /// addDays(): Adds a specified number of days to a DateTime.
-  DateTime addDays(int days) {
+  DateTime addDays({int days = 0}) {
     return add(Duration(days: days));
   }
 
   /// subtractDays(): Subtracts a specified number of days from a DateTime.
-  DateTime subtractDays(int days) {
+  DateTime subtractDays({int days = 0}) {
     return subtract(Duration(days: days));
   }
 
   /// addMonths(): Adds a specified number of months to a DateTime.
-  DateTime addMonths(int months) {
+  DateTime addMonths({int months = 0}) {
     return DateTime(year, month + months, day, hour, minute, second,
         millisecond, microsecond);
   }
@@ -176,7 +169,7 @@ DateTime nextWeek() {
     DateTime result = this;
 
     while (daysToAdd > 0) {
-      result = result.add(Duration(days: 1));
+      result = result.add( const  Duration(days: 1));
       if (result.weekday == DateTime.saturday ||
           result.weekday == DateTime.sunday) {
         continue; // Skip weekends
@@ -202,7 +195,7 @@ DateTime nextWeek() {
 
   /// formatDate(): Formats a DateTime object using a specified format string.
   /// The likeGiven parameter is used to provide a format hint, and the function detects the appropriate format based on the string's contents.
-  String? formatDate({required String likeGiven}) {
+  String formatDate({required String likeGiven}) {
     String dateFormat = likeGiven.detectDateFormat() ?? "dd-MM-yyyy";
     String formattedDate = DateFormat(dateFormat).format(this);
     return formattedDate;
@@ -235,12 +228,12 @@ DateTime nextWeek() {
 
   }
 
-    int differenceInYear({ required DateTime endDate}){
-    
-    Duration difference = this.difference(endDate);
-      int years = difference.inDays ~/ 365;
+int differenceInYear({ required DateTime endDate}){
+  
+  Duration difference = this.difference(endDate);
+  int years = difference.inDays ~/ 365;
 
-     return years;
+  return years;
 
   }
 
@@ -329,7 +322,7 @@ DateTime nextWeek() {
     var beginningNextMonth = (month.month < 12)
         ? DateTime(month.year, month.month + 1, 1)
         : DateTime(month.year + 1, 1, 1);
-    return beginningNextMonth.subtract(Duration(days: 1));
+    return beginningNextMonth.subtract(const Duration(days: 1));
   }
 
 
@@ -338,7 +331,7 @@ DateTime nextWeek() {
     var offset = start.timeZoneOffset;
     while (i.isBefore(end)) {
       yield i;
-      i = i.add(Duration(days: 1));
+      i = i.add( const Duration(days: 1));
       var timeZoneDiff = i.timeZoneOffset - offset;
       if (timeZoneDiff.inSeconds != 0) {
         offset = i.timeZoneOffset;
@@ -362,6 +355,34 @@ DateTime nextWeek() {
 
     var lastToDisplay = last.add(Duration(days: daysAfter));
     return daysInRange(firstToDisplay, lastToDisplay).toList();
+  }
+
+
+  String timeAgoFromNow() {
+    final now = DateTime.now();
+    final difference = now.difference(this);
+
+    if (difference.inDays >= 365) {
+      return difference.inDays ~/ 365 == 1
+          ? '1 year ago'
+          : '${difference.inDays ~/ 365} years ago';
+    } else if (difference.inDays >= 30) {
+      return difference.inDays ~/ 30 == 1
+          ? '1 month ago'
+          : '${difference.inDays ~/ 30} months ago';
+    } else if (difference.inDays >= 7) {
+      return difference.inDays ~/ 7 == 1
+          ? '1 week ago'
+          : '${difference.inDays ~/ 7} weeks ago';
+    } else if (difference.inDays >= 1) {
+      return difference.inDays == 1 ? '1 day ago' : '${difference.inDays} days ago';
+    } else if (difference.inHours >= 1) {
+      return difference.inHours == 1 ? '1 hour ago' : '${difference.inHours} hours ago';
+    } else if (difference.inMinutes >= 1) {
+      return difference.inMinutes == 1 ? '1 minute ago' : '${difference.inMinutes} minutes ago';
+    } else {
+      return 'Just now';
+    }
   }
 
 }
