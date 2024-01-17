@@ -5,6 +5,11 @@ extension DateTimeFormatting on DateTime {
     return toIso8601String();
   }
 
+  String getShortMonth() => DateFormat.MMM().format(this);
+  String getLongMonth() => DateFormat.MMMM().format(this);
+  String getShortDay() => DateFormat.E().format(this);
+  String getLongDay() => DateFormat.EEEE().format(this);
+
  DateTime getPreviousMonth() {
     var y = year;
     var m = month;
@@ -193,14 +198,6 @@ DateTime nextWeek() {
     return age;
   }
 
-  /// formatDate(): Formats a DateTime object using a specified format string.
-  /// The likeGiven parameter is used to provide a format hint, and the function detects the appropriate format based on the string's contents.
-  String formatDate({required String likeGiven}) {
-    String dateFormat = likeGiven.detectDateFormat() ?? "dd-MM-yyyy";
-    String formattedDate = DateFormat(dateFormat).format(this);
-    return formattedDate;
-  }
-
    bool isFutureDate() {
     final currentTime = DateTime.now();
     return isAfter(currentTime);
@@ -355,6 +352,18 @@ int differenceInYear({ required DateTime endDate}){
 
     var lastToDisplay = last.add(Duration(days: daysAfter));
     return daysInRange(firstToDisplay, lastToDisplay).toList();
+  }
+
+  String getGreeting() {
+    int hour = this.hour;
+
+    if (hour >= 5 && hour < 12) {
+      return "Good Morning";
+    } else if (hour >= 12 && hour < 17) {
+      return "Good Afternoon";
+    } else {
+      return "Good Night";
+    }
   }
 
 

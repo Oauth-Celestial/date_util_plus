@@ -1,6 +1,6 @@
 name: date_util_plus
-description: A simple dart API with a complete set of date helper methods not available in the DateTime API.
-version: 0.0.1
+description: DateUtilPlus, a powerful Dart API designed to augment and simplify date and time handling in your Dart projects. 
+version: 0.0.2
 repository: "https://github.com/Oauth-Celestial/date_util_plus.git"
 
 environment:

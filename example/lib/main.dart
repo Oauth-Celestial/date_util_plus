@@ -33,18 +33,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  formatDateBasedOn() {
-  
-   print(DateTime.now().getPreviousMonth());
+ 
+
+  formatDatefromCustonInput(){
+
+    String date = "1998-04-29".formatServerDateTo(uiFormat: "29 Dec 1999");
+
+    print(date);
   }
 
   int _counter = 0;
 
   void _incrementCounter() {
-    formatDateBasedOn();
-    setState(() {
-      _counter++;
-    });
+   formatDatefromCustonInput();
   }
 
   @override
